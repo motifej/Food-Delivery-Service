@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="card card-container">
+
+        <form class="form-signin text-center">
+            <input type="email" class="form-control" placeholder="Email address" ng-model="email" required autofocus>
+            <input type="password" class="form-control" placeholder="Password" ng-model="password" required>
+            <input type="password" class="form-control" placeholder="New Password" ng-model="new_password" required>
+            <p>{{result}}</p>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" ng-click="passRecovery(email, password, new_password)">Change Password</button>
+        </form>
+    </div>
+</div>

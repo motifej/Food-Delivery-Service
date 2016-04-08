@@ -1,0 +1,126 @@
+<!-- Header with order info -->
+<nav class="navbar navbar-default navbar-fixed-top" ng-show="isLogged">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <a class="navbar-brand" href="#"><strong>CHI Software</strong></a>
+            <a class="navbar-brand">Общая стоимость: {{totalCost}} ₴</span></a>
+
+            <form class="navbar-form navbar-left" role="search">
+                <button type="submit" class="btn btn-primary" ng-click="sendSelected()">Подтвердить</button> <span class="label label-success">{{success}}</span><span class="label label-danger">{{fail}}</span>
+            </form>
+
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a>{{email}}</a></li>
+                <li ng-click="logout()"><a href="#">Log Out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Menu Table -->
+
+<div class="container">
+    <div class="jumbotron text-center">
+
+        <div ng-show="!isLogged">
+            <p>Для заказа еды <a href="/login">Войдите</a> или <a href="/register">Зарегистрируйтесь</a>
+        </div>
+
+        <h3>CHI Software <small>Food Delivery</small></h3>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#table-1" data-toggle="tab" target="_self">Меню</a> </li>
+            <li ng-show="isLogged"><a href="#table-2" data-toggle="tab" target="_self">Мой заказ</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="table-1">
+                <ul class="nav nav-tabs">
+                    <li class="active mount"><a href="#tabl-0" data-toggle="tab" target="_self"><pre> Понедельник <span class="label label-info" ng-show="isLogged">{{models[0]}}</span></pre></a></li>
+                    <li ng-repeat="day in ['Вторник', 'Среда', 'Четверг', 'Пятница']" class="mount">
+                        <a href="#tabl-{{$index+1}}" data-toggle="tab" target="_self">
+                            <pre>  {{day}} <span class="label label-info" ng-show="isLogged">{{models[$index+1]}}</span> </pre>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <div class="tab-pane fade in active" id="tabl-0" ng-init="tab=0">
+                        <table class="table table-hover ">
+                            <thead>
+                            <tr>
+                                <th class="tab-index">#</th>
+                                <th class="tab-name">Блюдо</th>
+                                <th class="tab-price">Цена</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in data['mon']" class="{{count > 0 ? 'selectedRow' : ''}}">
+                                <th class="tab-index">{{ $index + 1 }}</th>
+                                <th class="tab-name">{{ order.dish }}</th>
+                                <th class="tab-price">
+                                    {{order.price}}
+                                    <input ng-show="isLogged" ng-click="totalCostUpdate(count * order.price, $index, tab)" ng-model="count" type="number" value="0" min="0" max="10" step="1" data-number-to-fixed="2" data-number-stepfactor="100" class="currency" onwheel="return false;" onkeydown="return false;"/>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="tabl-{{$index+1}}" ng-repeat="day in ['tue', 'wed', 'thu', 'fri']" ng-init="tab=$index+1">
+                        <table class="table table-hover ">
+                            <thead>
+                            <tr>
+                                <th class="tab-index">#</th>
+                                <th class="tab-name">Блюдо</th>
+                                <th class="tab-price">Цена</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in data[day]" class="{{count > 0 ? 'selectedRow' : ''}}">
+                                <th class="tab-index">{{ $index + 1 }}</th>
+                                <th class="tab-name">{{ order.dish }}</th>
+                                <th class="tab-price">
+                                    {{order.price}}
+                                    <input ng-show="isLogged" ng-click="totalCostUpdate(count * order.price, $index, tab)" ng-model="count" type="number" value="0" min="0" max="10" step="1" data-number-to-fixed="2" data-number-stepfactor="100" class="currency" onwheel="return false;" onkeydown="return false;"/>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="table-2">
+                <div class="panel panel-default">
+                    <div class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table table-bordered" ng-repeat="key in ['mon', 'tue', 'wed', 'thu', 'fri']" ng-if="dataAboutMe.order[key].order[0]">
+                                <thead>
+                                <tr>
+                                    <caption><h4>{{getRussianName(key)}}</h4></caption>
+                                    <th class="info">#</th>
+                                    <th class="info">Блюдо</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="dish in dataAboutMe.order[key].order">
+                                    <th class="info" style="width: 5%">{{ $index + 1 }}</th>
+                                    <th class="success"><span>{{ getDishName(key, dish.dishIndex).dish }}  <span class="badge">{{dish.count}}</span></span></th>
+                                </tr>
+                                <tr>
+                                    <th class="info">#</th>
+                                    <th class="info">Цена за день: {{dataAboutMe.order[key].priceForDay}}₴</th>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

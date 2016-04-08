@@ -1,0 +1,148 @@
+<!-- Header with order info -->
+<nav class="navbar navbar-default navbar-fixed-top" ng-show="isLogged">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#"><strong>CHI Software</strong></a>
+
+            <form class="navbar-form navbar-left" role="search">
+                <button type="submit" class="btn btn-primary" ng-click="downloadExcel()">Загрузить таблицу Excel</button>
+                <button type="submit" class="btn btn-warning" ng-click="clearUserOrders()">Очистить заказы</button> <span class="label label-success">{{success}}</span><span class="label label-danger">{{fail}}</span>
+            </form>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a>{{email}}</a></li>
+                <li ng-click="logout()"><a href="#">Log Out</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Menu Table -->
+
+<div class="container">
+    <div class="jumbotron text-center">
+
+        <div ng-show="!isLogged">
+            <p>Для заказа еды <a href="/login">Войдите</a> или <a href="/register">Зерегистрируйтесь</a>
+        </div>
+
+        <h3>CHI Software <small>Food Delivery</small></h3>
+
+        <!-- Table Outer -->
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#table-1" data-toggle="tab" target="_self">Создать меню</a> </li>
+            <li><a href="#table-2" data-toggle="tab" target="_self">Заказы сотрудников</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="table-1">
+
+                <ul class="nav nav-tabs">
+                    <li class="active mount" style="width: 20%"><a href="#tabl-0" data-toggle="tab" target="_self"><pre>Понедельник</pre></a></li>
+                    <li ng-repeat="day in [' Вторник ', '  Среда  ', ' Четверг ', ' Пятница ']" class="mount"><a href="#tabl-{{$index+1}}" data-toggle="tab" target="_self"><pre>{{day}}</pre></a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="tabl-0" ng-init="tab=0">
+                        <table class="table table-hover ">
+                            <thead>
+                            <tr>
+                                <th class="tab-index">#</th>
+                                <th class="tab-name">Блюдо</th>
+                                <th class="tab-price">Цена</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in data['mon']">
+                                <th class="tab-index">{{ $index + 1 }}</th>
+                                <th class="tab-name">{{ order.dish }}</th>
+                                <th class="tab-price">
+                                    {{order.price}}
+                                    <button type="button" class="btn btn-danger btn-xs" aria-label="Left Align" style="float: right; height: 20px" ng-click="removeDish($index)">
+                                        X
+                                    </button>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="tab-pane fade" id="tabl-{{$index+1}}" ng-repeat="day in ['tue', 'wed', 'thu', 'fri']" ng-init="tab=$index+1">
+                        <table class="table table-hover ">
+                            <thead>
+                            <tr>
+                                <th class="tab-index">#</th>
+                                <th class="tab-name">Блюдо</th>
+                                <th class="tab-price">Цена</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="order in data[day]">
+                                <th class="tab-index">{{ $index + 1 }}</th>
+                                <th class="tab-name">{{ order.dish }}</th>
+                                <th class="tab-price">
+                                    {{order.price}}
+                                    <button type="button" class="btn btn-danger btn-xs" aria-label="Left Align" style="float: right; height: 20px" ng-click="removeDish($index)">
+                                        X
+                                    </button>
+                                </th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="order-form" class="row">
+                    <div class="col-sm-8 col-sm-offset-2 text-center">
+                        <form>
+                            <div class="form-group">
+                                <input id="dish" type="text" class="form-control input-lg text-center" maxlength="45" placeholder="Название блюда" ng-model="dishName"><input id="price" type="text" class="form-control input-lg text-center" placeholder="Цена" maxlength="2" ng-model="dishPrice">
+                                <br><span class="label label-danger">{{warning}}</span>
+
+                            </div>
+                            <button type="submit" class="btn btn-primary" ng-click="addDish()">Добавить</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane fade" id="table-2">
+                <div class="panel-group" id="accordion">
+                    <input type="text" ng-model="query" placeholder="Введите имя пользователя для поиска" class="pull-right" style="width: 100%; height: 40px; border: 2px solid grey">
+                    <div class="panel panel-default" ng-repeat="user in users | filter: query" ng-if="user.order">
+                        <div class="panel-heading" style="background-color: #99FFCC">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#{{ user.lastName }}" target="_self">
+                                    <h4><i><strong>{{user.name + ' ' + user.lastName  + ' [за неделю: ' + getWeeklyPrice(user.order) + ']'}}</strong></i></h4>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="{{ user.lastName }}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-bordered" ng-repeat="key in ['mon', 'tue', 'wed', 'thu', 'fri']" ng-if="user.order[key].order[0]">
+                                    <thead>
+                                    <caption><h4>{{getRussianName(key)}}</h4></caption>
+                                    <tr>
+                                        <th class="info">#</th>
+                                        <th class="info">Блюдо</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="dish in user.order[key].order">
+                                        <th class="info" style="width: 5%">{{ $index + 1 }}</th>
+                                        <th class="success"><span>{{ getDishName(key, dish.dishIndex).dish }}  <span class="badge">{{dish.count}}</span></span></th>
+                                    </tr>
+                                    <tr>
+                                        <th class="info">#</th>
+                                        <th class="info">Цена за день: {{user.order[key].priceForDay}}₴</th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

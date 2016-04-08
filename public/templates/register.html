@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="card card-container">
+        <form class="form-signin">
+
+            <input type="text" class="form-control" placeholder="Name" ng-model="name" required autofocus>
+            <input type="text" class="form-control" placeholder="Surname" ng-model="lastname" required>
+            <input type="email" class="form-control" placeholder="Email address" ng-model="email" required autofocus>
+            <input type="password" class="form-control" placeholder="Password" ng-model="password" required>
+
+            <button class="btn btn-lg btn-primary btn-block btn-signin btn-register"
+                    type="submit"
+                    ng-click="register(name, lastname, email, password)">
+                Register
+            </button>
+
+        </form>
+    </div>
+</div>

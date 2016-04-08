@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="foodDelivery">
+<head>
+    <base href="/" />
+    <meta charset="UTF-8">
+    <title>Food Service</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+</head>
+<body>
+    <ng-view></ng-view>
+</body>
+<!-- Angular Files -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<!-- AngularFire -->
+<script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
+<script src="https://cdn.firebase.com/libs/angularfire/1.1.3/angularfire.min.js"></script>
+<!-- Controllers -->
+<script src="application.js"></script>
+<script src="javascripts/controllers/HomeController.js"></script>
+<script src="javascripts/controllers/RegisterController.js"></script>
+<script src="javascripts/controllers/LogInController.js"></script>
+<script src="javascripts/controllers/AdminController.js"></script>
+<script src="javascripts/controllers/PassRecoveryController.js"></script>
+</html>
