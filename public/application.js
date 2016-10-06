@@ -8,20 +8,21 @@ angular.module('foodDelivery', [
   'foodDelivery.home',
   'foodDelivery.admin',
   'foodDelivery.recovery'
+
 ])
 
   .service('FirebaseService', function () {
-    const ref = new Firebase('https://chi-userbase.firebaseio.com/');
-    const menuTable = new Firebase('https://chi-userbase.firebaseio.com/menu');
-    const userTable = new Firebase('https://chi-userbase.firebaseio.com/user_map');
+    var ref = new Firebase('https://chi-userbase.firebaseio.com/');
+    var menuTable = new Firebase('https://chi-userbase.firebaseio.com/menu');
+    var userTable = new Firebase('https://chi-userbase.firebaseio.com/user_map');
 
     this.getMyself = function (email) {
       return new Promise(function (resolve, reject) {
         ref.child('user_map').orderByChild('email').startAt(email).endAt(email).once('value', function(snap) {
-          let userObject = snap.val() || false;
+          var userObject = snap.val() || false;
 
           if (userObject) {
-            let key = Object.keys(userObject)[0];
+            var key = Object.keys(userObject)[0];
             resolve(userObject[key])
           } else {
             reject()
@@ -60,7 +61,7 @@ angular.module('foodDelivery', [
           password: password
         }, function (error, userData) {
           if (error) {
-            reject(`${error}`);
+            reject(JSON.stringify(error));
           } else {
             resolve(userData.uid);
 
@@ -83,7 +84,7 @@ angular.module('foodDelivery', [
     this.updateUserOrder = function (email, order) {
       return new Promise(function (resolve, reject) {
         ref.child('user_map').orderByChild('email').startAt(email).endAt(email).once('value', function (snap) {
-          let key = Object.keys(snap.val())[0];
+          var key = Object.keys(snap.val())[0];
           ref.child('user_map').child(key).update({order: order}, function (err) {
             if (err) {
               reject(err)
@@ -98,7 +99,7 @@ angular.module('foodDelivery', [
     this.clearOrders = function () {
       return new Promise(function (resolve, reject) {
         userTable.on('value', function (snapshot) {
-          let userKeys = Object.keys(snapshot.val());
+          var userKeys = Object.keys(snapshot.val());
           userKeys.forEach(function (value, index) {
             userTable.child(value).child('order').remove(function (err) {
               if (err) {
@@ -121,7 +122,7 @@ angular.module('foodDelivery', [
           password: password
         }, function (error, authData) {
           if (error) {
-            reject(`${error}`);
+            reject(JSON.stringify(error));
           } else {
             resolve(authData);
           }
@@ -155,7 +156,7 @@ angular.module('foodDelivery', [
     };
 
     this.isLogged = function () {
-      let data = ref.getAuth();
+      var data = ref.getAuth();
       if (data) {
         return data;
       } else {
@@ -182,8 +183,8 @@ angular.module('foodDelivery', [
     this.removeDishFromMenu = function (day, index) {
       return new Promise(function (resolve, reject) {
         ref.child('menu').child(day).once('value', function (snap) {
-          let list = snap.val();
-          let needed = Object.keys(list)[index];
+          var list = snap.val();
+          var needed = Object.keys(list)[index];
           ref.child('menu').child(day).child(needed).remove(function (err) {
             if (err) {
               reject(err);

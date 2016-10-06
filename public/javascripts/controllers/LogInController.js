@@ -16,7 +16,7 @@ angular.module('foodDelivery.login', ['ngRoute'])
 			if(email && password) {
 				FirebaseService.logIn(email, password)
 					.then(
-						resolve => {
+						function (resolve) {
 							$scope.$apply(function() {
 								if(resolve.uid === '680b08ac-d1a4-4f75-a830-0678619d0445') {
 									$location.path('/admin');
@@ -27,7 +27,7 @@ angular.module('foodDelivery.login', ['ngRoute'])
 						}
 					)
 					.catch(
-						err => {
+						function(err) {
 							$scope.$apply(function() {
 								$scope.result = err;
 							});

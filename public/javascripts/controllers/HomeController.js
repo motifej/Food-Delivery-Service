@@ -23,7 +23,7 @@ angular.module('foodDelivery.home', ['ngRoute'])
         $scope.dataAboutMe = null;
 
 
-        let isLogged = FirebaseService.isLogged();
+        var isLogged = FirebaseService.isLogged();
 
         if(isLogged.uid === '680b08ac-d1a4-4f75-a830-0678619d0445') {
             $location.path('/admin');
@@ -37,7 +37,7 @@ angular.module('foodDelivery.home', ['ngRoute'])
 
         FirebaseService.getMenu()
             .then(
-                resolve => {
+                function(resolve) {
                     $scope.$apply(function () {
                         $scope.data = resolve;
                     });
@@ -50,19 +50,19 @@ angular.module('foodDelivery.home', ['ngRoute'])
         };
 
 
-        let orderStorage = [[],[],[],[],[]];
+        var orderStorage = [[],[],[],[],[]];
         $scope.models = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
         $scope.totalCostUpdate = function (value, index, tab) {
 
-            let total = 0;
+            var total = 0;
             orderStorage[tab][index] = value;
 
             $scope.models[tab] = orderStorage[tab].reduce(function(previousValue, currentValue, currentIndex, array) {
                 return (previousValue || 0) + (currentValue || 0);
             });
 
-            for(let i = 0; i < orderStorage.length; i++) {
-                for(let j = 0; j < orderStorage[i].length; j++) {
+            for(var i = 0; i < orderStorage.length; i++) {
+                for(var j = 0; j < orderStorage[i].length; j++) {
                     if(orderStorage[i][j]) total += orderStorage[i][j];
                 }
                 total += addBoxesToCost(orderStorage[i]);
@@ -73,24 +73,24 @@ angular.module('foodDelivery.home', ['ngRoute'])
 
         $scope.sendSelected = function () {
 
-            let prepareArray = [$scope.data.mon, $scope.data.tue, $scope.data.wed, $scope.data.thu, $scope.data.fri];
-            let emptyOrder = true;
+            var prepareArray = [$scope.data.mon, $scope.data.tue, $scope.data.wed, $scope.data.thu, $scope.data.fri];
+            var emptyOrder = true;
 
-            let result = {
+            var result = {
                 mon: {priceForDay: +$scope.models[0] + addBoxesToCost(orderStorage[0]), order: []},
                 tue: {priceForDay: +$scope.models[1] + addBoxesToCost(orderStorage[1]), order: []},
                 wed: {priceForDay: +$scope.models[2] + addBoxesToCost(orderStorage[2]), order: []},
                 thu: {priceForDay: +$scope.models[3] + addBoxesToCost(orderStorage[3]), order: []},
                 fri: {priceForDay: +$scope.models[4] + addBoxesToCost(orderStorage[4]), order: []}
             };
-            let keys = Object.keys(result);
+            var keys = Object.keys(result);
 
-            for(let i = 0; i < orderStorage.length; i++) {
-                for(let j = 0; j < orderStorage[i].length; j++) {
+            for(var i = 0; i < orderStorage.length; i++) {
+                for(var j = 0; j < orderStorage[i].length; j++) {
                     if(orderStorage[i][j]) {
                         emptyOrder = false;
-                        let localKeys = Object.keys(prepareArray[i]);
-                        let orderUnit = prepareArray[i][localKeys[j]];
+                        var localKeys = Object.keys(prepareArray[i]);
+                        var orderUnit = prepareArray[i][localKeys[j]];
                         result[keys[i]].order.push({dishIndex: j, count: orderStorage[i][j]/orderUnit.price});
                     }
                 }
@@ -98,7 +98,7 @@ angular.module('foodDelivery.home', ['ngRoute'])
 
             if(!emptyOrder) {
                 FirebaseService.updateUserOrder($scope.email, result).then(
-                        () => {
+                        function () {
                             $scope.$apply(function () {
                                 $scope.success = 'Ваш заказ успешно доставлен';
                                 $timeout(function () {
@@ -106,7 +106,7 @@ angular.module('foodDelivery.home', ['ngRoute'])
                                 }, 2000);
                             })
                         },
-                        reject => {
+                        function (reject) {
                             $scope.$apply(function () {
                                 $scope.fail = reject;
                                 $timeout(function () {
@@ -124,7 +124,7 @@ angular.module('foodDelivery.home', ['ngRoute'])
         };
 
       $scope.getRussianName = function (key) {
-        let template = {
+        var template = {
           mon: 'Понедельник',
           tue: 'Вторник',
           wed: 'Среда',
@@ -136,12 +136,12 @@ angular.module('foodDelivery.home', ['ngRoute'])
 
       FirebaseService.getMyself($scope.email)
         .then(
-          resolve => {
+          function(resolve) {
             $scope.$apply(function () {
               $scope.dataAboutMe = resolve;
             })
           },
-          reject => console.log('Can not load my menu')
+          function(reject){ console.log('Can not load my menu')}
         );
 
         $scope.getDishName = function (key, index) {
