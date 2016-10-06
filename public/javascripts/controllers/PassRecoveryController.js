@@ -17,7 +17,7 @@ angular.module('foodDelivery.recovery', ['ngRoute'])
 
         FirebaseService.passRecovery(email, old_password, new_password)
           .then(
-            resolve => {
+            function(resolve) {
               $scope.$apply(function() {
                 if(resolve.uid === '680b08ac-d1a4-4f75-a830-0678619d0445') {
                   $location.path('/admin');
@@ -28,7 +28,7 @@ angular.module('foodDelivery.recovery', ['ngRoute'])
             }
           )
           .catch(
-            err => {
+            function(err) {
               $scope.$apply(function() {
                 $scope.result = err;
               });

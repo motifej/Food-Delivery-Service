@@ -19,7 +19,7 @@ angular.module('foodDelivery.register', ['ngRoute'])
 
         FirebaseService.createUser(name, lastname, email, password)
           .then(
-            uid => {
+            function (uid) {
               return new Promise(function (resolve, reject) {
                 FirebaseService.userMapForming(name, lastname, email, uid, function () {
                   resolve()
@@ -27,9 +27,9 @@ angular.module('foodDelivery.register', ['ngRoute'])
               });
             }
           )
-          .then(resolve => window.location = '/')
+          .then(function() { window.location = '/'})
           .catch(
-            err => {
+            function(err) {
               $scope.$apply(function () {
                 $scope.result = err;
               });

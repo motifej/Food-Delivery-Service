@@ -20,7 +20,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
         $scope.fail = null;
         $scope.isLogged = false;
 
-        let isLogged = FirebaseService.isLogged();
+        var isLogged = FirebaseService.isLogged();
 
         if(isLogged) {
             $scope.email = isLogged.password.email;
@@ -29,7 +29,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
 
         FirebaseService.getMenu()
             .then(
-                resolve => {
+                function(resolve) {
                     $scope.$apply(function () {
                         if(isLogged) {
                             $scope.email = isLogged.password.email;
@@ -42,21 +42,21 @@ angular.module('foodDelivery.admin', ['ngRoute'])
 
         FirebaseService.getUsers()
             .then(
-                resolve => {
-                $scope.$apply(function () {
-                    let result = [];
-                    for(let key in resolve) {
-                        let handledUser = {};
-                        handledUser.name = resolve[key].name;
-                        handledUser.lastName = resolve[key].lastName;
-                        handledUser.order = resolve[key].order || false;
-                        result.push(handledUser)
-                    }
+                function(resolve) {
+                    $scope.$apply(function () {
+                        var result = [];
+                        for(var key in resolve) {
+                            var handledUser = {};
+                            handledUser.name = resolve[key].name;
+                            handledUser.lastName = resolve[key].lastName;
+                            handledUser.order = resolve[key].order || false;
+                            result.push(handledUser)
+                        }
 
-                    $scope.users = result;
-                });
+                        $scope.users = result;
+                    });
             },
-            () => console.log('Internal error - no users.')
+            function() { console.log('Internal error - no users.') }
         );
 
         $scope.logout = function () {
@@ -66,9 +66,9 @@ angular.module('foodDelivery.admin', ['ngRoute'])
 
 
         $scope.addDish = function () {
-            let tabIndex = getActiveTabIndex();
+            var tabIndex = getActiveTabIndex();
             console.log(tabIndex);
-            let template = ['mon', 'tue', 'wed', 'thu', 'fri'];
+            var template = ['mon', 'tue', 'wed', 'thu', 'fri'];
             if($scope.dishName && $scope.dishPrice) {
 
                 if(!isNumeric($scope.dishPrice)) {
@@ -78,10 +78,10 @@ angular.module('foodDelivery.admin', ['ngRoute'])
 
                 FirebaseService.addDishToMenu(template[tabIndex] ,$scope.dishName, $scope.dishPrice)
                     .then(
-                        resolve => FirebaseService.getMenu()
+                        function(resolve){ FirebaseService.getMenu()}
                     )
                     .then(
-                        resolve => {
+                        function(resolve) {
                             $scope.$apply(function () {
                                 $scope.data = resolve;
                                 $scope.dishName = '';
@@ -91,7 +91,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
                         }
                     )
                     .catch(
-                      err => {
+                      function(err) {
                           console.log(err)
                       }
                     );
@@ -105,14 +105,14 @@ angular.module('foodDelivery.admin', ['ngRoute'])
         };
 
         $scope.removeDish = function(index) {
-            let tabIndex = getActiveTabIndex();
-            let template = ['mon', 'tue', 'wed', 'thu', 'fri'];
+            var tabIndex = getActiveTabIndex();
+            var template = ['mon', 'tue', 'wed', 'thu', 'fri'];
             FirebaseService.removeDishFromMenu(template[tabIndex], index)
                 .then(
-                    resolve => FirebaseService.getMenu()
+                    function(resolve){ FirebaseService.getMenu()}
                 )
                 .then(
-                    resolve => {
+                    function(resolve) {
                         $scope.$apply(function () {
                             if(isLogged) {
                                 $scope.email = isLogged.password.email;
@@ -123,7 +123,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
                     }
                 )
                 .catch(
-                  err => {
+                  function(err) {
                     console.log(err)
                   }
                 );
@@ -132,7 +132,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
         $scope.clearUserOrders = function () {
             FirebaseService.clearOrders()
               .then(
-                () => {
+                function () {
                     $scope.$apply(function () {
                         $scope.success = 'Заказы успешно очищены';
                         $timeout(function () {
@@ -142,7 +142,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
                 }
             )
             .catch(
-              err => {
+              function(err) {
                 $scope.$apply(function () {
                   $scope.fail = err;
                   $timeout(function () {
@@ -158,7 +158,7 @@ angular.module('foodDelivery.admin', ['ngRoute'])
         };
 
         $scope.getRussianName = function (key) {
-            let template = {
+            var template = {
                 mon: 'Понедельник',
                 tue: 'Вторник',
                 wed: 'Среда',
@@ -169,8 +169,8 @@ angular.module('foodDelivery.admin', ['ngRoute'])
         };
 
         $scope.getWeeklyPrice = function (userOrder) {
-            let weeklyPrice = 0;
-            for(let day in userOrder) {
+            var weeklyPrice = 0;
+            for(var day in userOrder) {
                 weeklyPrice += userOrder[day].priceForDay;
             }
             return weeklyPrice;
@@ -181,8 +181,8 @@ angular.module('foodDelivery.admin', ['ngRoute'])
         };
 
         function getActiveTabIndex() {
-            let activeTab = document.querySelector('li.active.mount');
-            let link = activeTab.firstElementChild.getAttribute("href");
+            var activeTab = document.querySelector('li.active.mount');
+            var link = activeTab.firstElementChild.getAttribute("href");
             return link[link.length-1];
         }
 
