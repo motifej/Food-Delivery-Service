@@ -95,8 +95,11 @@ angular.module('foodDelivery.home', ['ngRoute'])
                     }
                 }
             }
-
-            if(!emptyOrder) {
+            var makeOrder = true;
+            if(emptyOrder) {
+                makeOrder = window.confirm('Заказ пуст, вы уверены что хотите подтвердить? При этом предыдущий заказ будет аннулирован!');
+            }
+            if(makeOrder) {
                 FirebaseService.updateUserOrder($scope.email, result).then(
                         function () {
                             $scope.$apply(function () {
@@ -115,11 +118,6 @@ angular.module('foodDelivery.home', ['ngRoute'])
                             })
                         }
                 );
-            } else {
-                $scope.fail = 'Заказ не может быть пустым';
-                $timeout(function () {
-                    $scope.fail = '';
-                }, 2000);
             }
         };
 
