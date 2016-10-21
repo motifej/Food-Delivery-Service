@@ -64,7 +64,7 @@
                                 <th class="tab-name">{{ order.dish }}</th>
                                 <th class="tab-price">
                                     {{order.price}}
-                                    <input ng-show="isLogged" ng-click="totalCostUpdate(count * order.price, $index, tab)" ng-model="count" type="number" value="0" min="0" max="10" step="1" data-number-to-fixed="2" data-number-stepfactor="100" class="currency" onwheel="return false;" onkeydown="return false;"/>
+                                    <input ng-show="isLogged" ng-change="totalCostUpdate(count * order.price, $index, tab)" ng-model="count" type="number" value="0" min="0" max="10" step="1" data-number-to-fixed="2" data-number-stepfactor="100" class="currency" onwheel="return false;"/>
                                 </th>
                             </tr>
                             </tbody>
@@ -86,7 +86,7 @@
                                 <th class="tab-name">{{ order.dish }}</th>
                                 <th class="tab-price">
                                     {{order.price}}
-                                    <input ng-show="isLogged" ng-click="totalCostUpdate(count * order.price, $index, tab)" ng-model="count" type="number" value="0" min="0" max="10" step="1" data-number-to-fixed="2" data-number-stepfactor="100" class="currency" onwheel="return false;" onkeydown="return false;"/>
+                                    <input ng-show="isLogged" ng-change="totalCostUpdate(count * order.price, $index, tab)" ng-model="count" type="number" value="0" min="0" max="10" step="1" data-number-to-fixed="2" data-number-stepfactor="100" class="currency" onwheel="return false;"/>
                                 </th>
                             </tr>
                             </tbody>
